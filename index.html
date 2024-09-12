@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gasto Semanal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Gasto Semanal</h1>
+    <div class="contenido">
+      <div class="formulario-contenedor">
+        <h2>Añade tus gastos aquí</h2>
+        <form>
+          <div class="grupo-input">
+            <label for="gasto">Gasto:</label>
+            <input type="text" id="gasto" placeholder="Nombre Gasto" />
+          </div>
+          <div class="grupo-input">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" id="cantidad" placeholder="Cantidad en $" />
+          </div>
+          <button type="button" class="btn btn-primary" onclick="validar()">
+            Agregar
+          </button>
+        </form>
+      </div>
+      <div class="lista-contenedor">
+        <h2>Listado</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Gasto</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Opciones</th>
+            </tr>
+          </thead>
+          <tbody id="body"></tbody>
+        </table>  
+        <div class="presupuesto">
+          <p>Presupuesto: $<span id="presupuesto">0</span></p>
+        </div>
+        <div class="restante">
+          <p>Restante: $<span id="restante">0</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    let data = [];
+    let editMode = false;
+    let editIndex = -1;
+    let presupuesto = 0;
+
+    window.onload = function() {
+      Swal.fire({
+        title: 'Ingrese su presupuesto',
+        input: 'number',
+        inputAttributes: {
+          min: 1,
+          step: 0
+          
+        },
+        inputPlaceholder: 'Cantidad en $',
+        showCancelButton: false,
+        confirmButtonText: 'Aceptar',
+        inputValidator: (value) => {
+          if (!value || value <= 0) {
+            return 'Por favor ingrese un presupuesto válido!';
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          presupuesto = parseFloat(result.value);
+          document.getElementById('presupuesto').textContent = presupuesto.toLocaleString('es-ES');
+          document.getElementById('restante').textContent = presupuesto.toLocaleString('es-ES');
+        }
+      });
+    };
+
+    function pintar() {
+      const tbody = document.getElementById('body');
+      tbody.innerHTML = '';
+      data.forEach((e, i) => {
+        const tr = document.createElement('tr');
+
+        let td = document.createElement('td');
+        td.textContent = e.gasto;
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.textContent = `$${e.cantidad.toLocaleString('es-ES')}`;
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        const editar = document.createElement('button');
+        editar.textContent = '📝';
+        editar.classList.add('btn', 'btn-warning', 'me-2');
+        editar.addEventListener('click', () => {
+          document.getElementById('gasto').value = e.gasto;
+          document.getElementById('cantidad').value = e.cantidad;
+          editMode = true;
+          editIndex = i;
+        });
+
+        const eliminar = document.createElement('button');
+        eliminar.textContent = '❌';
+        eliminar.classList.add('btn', 'btn-danger');
+        eliminar.addEventListener('click', () => {
+          data.splice(i, 1);
+          pintar();
+          actualizarRestante();
+        });
+
+        td.appendChild(editar);
+        td.appendChild(eliminar);
+        tr.appendChild(td);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function validar() {
+      const gasto = document.getElementById('gasto').value.trim();
+      const cantidad = document.getElementById('cantidad').value.trim();
+
+      if (gasto === '') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Por favor, ingresa un nombre de gasto válido',
+        });
+        return;
+      }
+
+      if (cantidad === '' || isNaN(cantidad) || cantidad <= 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Por favor, ingresa una cantidad válida',
+        });
+        return;
+      }
+
+      enviar(gasto, cantidad);
+    }
+
+    function enviar(gasto, cantidad) {
+      const cantidadNum = parseFloat(cantidad);
+      const restante = presupuesto - data.reduce((valor, item) => valor + item.cantidad, 0);
+
+      if (!editMode && cantidadNum > restante) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'No puedes agregar un gasto que exceda el presupuesto restante',
+        });
+        return;
+      }
+
+      if (editMode) {
+        data[editIndex] = { gasto, cantidad: cantidadNum };
+        editMode = false;
+        editIndex = -1;
+      } else {
+        data.push({ gasto, cantidad: cantidadNum });
+      }
+
+      document.getElementById('gasto').value = '';
+      document.getElementById('cantidad').value = '';
+
+      pintar();
+      actualizarRestante();
+    }
+
+    function actualizarRestante() {
+      let gastado = data.reduce((acc, cur) => acc + cur.cantidad, 0);
+      let restante = presupuesto - gastado;
+
+      let restanteElement = document.getElementById('restante');
+      restanteElement.textContent = restante.toLocaleString('es-ES');
+
+      const restanteContainer = document.querySelector('.restante');
+
+      if (restante <= 0) {
+        restanteElement.style.color = 'red';
+        restanteContainer.style.backgroundColor = 'red';
+        Swal.fire({
+          icon: 'warning',
+          title: 'Presupuesto Excedido',
+          text: 'Has excedido el presupuesto!',
+        });
+        bloquearFormulario(true);
+      } else if (restante <= presupuesto * 0.2) {
+        restanteElement.style.color = 'orange';
+        restanteContainer.style.backgroundColor = 'orange';
+        bloquearFormulario(false);
+      } else {
+        restanteElement.style.color = 'black';
+        restanteContainer.style.backgroundColor = '#e6ffed';
+        bloquearFormulario(false);
+      }
+    }
+
+    function bloquearFormulario(bloquear) {
+      const inputs = document.querySelectorAll('#gasto, #cantidad');
+      const botonAgregar = document.querySelector('button[onclick="validar()"]');
+
+      inputs.forEach(input => input.disabled = bloquear);
+      botonAgregar.disabled = bloquear;
+    }
+  </script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: rgb(63,94,251);
+background: radial-gradient(circle, rgb(251, 63, 166) 0%, rgb(124, 5, 167) 98%);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .contenedor {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .contenido {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .formulario-contenedor,
+    .lista-contenedor {
+      flex: 1;
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      color: #999;
+    }
+
+    .formulario-contenedor {
+      border-right: 1px solid #ddd;
+    }
+
+    .grupo-input {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button.borrar {
+      background-color: #dc3545;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .cantidad {
+      background: #007bff;
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 10px;
+    }
+
+    .presupuesto,
+    .restante {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .presupuesto {
+      background: #e7f1ff;
+    }
+
+    .restante {
+      background: #e6ffed;
+    }
+  </style>
+</body>
+</html>
