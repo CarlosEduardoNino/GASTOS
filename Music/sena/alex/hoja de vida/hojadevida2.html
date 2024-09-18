@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      font-size: 1rem;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+
+    .fila1,
+    .fila2,
+    .fila4,
+    .fila3 {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .educacion,
+    .habilidades,
+    .expert,
+    .lenguajes,
+    .intereses {
+      box-sizing: border-box;
+    }
+
+    .fila-mitad {
+      grid-column: 2 / 3;
+      grid-row: 2;
+    }
+
+    header {
+      background-image: url('https://i.pinimg.com/236x/cf/e7/ee/cfe7ee9de7d8c7a6a502a6693fb78185.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 350px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      padding: 40px 10px;
+    }
+
+    .texto-header {
+      position: relative;
+      text-align: center;
+    }
+
+    .texto-header h1 {
+      margin-bottom: 10px;
+    }
+
+    .boton-azul2 {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 0 auto;
+      display: block;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .boton-azul1 {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 0 auto;
+      display: block;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .mi-experiencia, 
+    .informacion-personal,
+    .desarrollador-web-junior,
+    .educacion, 
+    .habilidades, 
+    .lenguajes,
+    .intereses {
+      padding: 2rem;
+      margin: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .mi-experiencia ul,
+    .informacion-personal ul,
+    .desarrollador-web-junior ul,
+    .educacion ul,
+    .habilidades ul,
+    .expert ul,
+    .lenguajes ul,
+    .intereses ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    section h2 {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    section h3 {
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+
+    section h4 {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .texto-header .descripcion {
+      position: absolute;
+      top: calc(100% + 210px);
+      left: 50%;
+      transform: translateX(-30%);
+      width: 70%;
+      margin: 0 auto;
+    }
+
+    .imagen-perfil {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto;
+      position: relative;
+      top: -10px;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      padding: 10px;
+      position: relative;
+      height: 60px;
+      width: 100%;
+      margin: 0;
+    }
+
+    .menu ul {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      list-style: none;
+      padding: 0;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .menu ul li {
+      display: inline-block;
+      margin-right: 0;
+    }
+
+    .menu ul li:last-child {
+      margin-right: 0;
+    }
+
+    .menu ul li a {
+      color: black;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .menu ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .desarrollador-web-junior {
+      background-color: rgba(0, 0, 0, 0.116);
+      padding: 10px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .informacion-personal {
+      background-color: rgba(0, 0, 0, 0.384);
+      padding: 20px;
+    }
+
+    .mi-experiencia {
+      background-color: rgba(0, 0, 0, 0.116);
+      padding: 10px;
+      border: 1px solid #ddd;
+      flex: 1;
+    }
+
+    .educacion ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .educacion ul li {
+      margin-bottom: 5px;
+    }
+
+    .educacion ul li::before {
+      content: "•";
+      color: #007bff;
+      display: inline-block;
+      width: 1em;
+      margin-right: 7px;
+    }
+
+    .educacion h2 {
+      font-size: 160%;
+      margin-bottom: 20px;
+    }
+
+    .educacion h3 {
+      font-size: 100%;
+      margin-bottom: 5px;
+    }
+
+    .educacion h4 {
+      font-size: 100%;
+      margin-bottom: 10px;
+    }
+
+    .resumen {
+      background-color: #fff;
+      padding: 20px;
+      flex: 1;
+    }
+
+    .intereses ul {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+    }
+
+    .intereses ul li {
+      color: black;
+      color: #007bff;
+      margin: 15px auto;
+    }
+
+    .habilidades ul {
+      padding-left: 0;
+    }
+
+    .centrado {
+      margin: 0 auto;
+      width: 50%;
+    }
+
+    .separacion-contenedor {
+      margin-bottom: 20px;
+    }
+
+    .imagen-fondo img {
+      width: 100%;
+      height: 120%;
+    }
+
+    .intereses ul li i {
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      padding: 5px;
+    }
+
+    .lenguajes {
+      background-color: #f2f2f2;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 5px;
+      width: 250px;
+      height: 200px;
+    }
+
+    .educacion,
+    .intereses {
+      width: 100%;
+    }
+
+    .lenguajes h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .lenguajes ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+
+    .lenguajes ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 5px;
+    }
+
+    .lenguajes ul li::before {
+      content: "•";
+      color: #007bff;
+      position: absolute;
+      left: 0;
+    }
+
+    .habilidades {
+      background-color: #f2f2f2;
+      padding: 5px;
+      margin-bottom: 20px;
+      width: 250px;
+      height: 450px;
+    }
+
+    .educacion {
+      background-color: #f2f2f2;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      width: 250px;
+      height: 350px;
+    }
+
+    .intereses {
+      background-color: #f2f2f2;
+      padding: 20px;
+      border: 1px solid #ddd;
+      margin-bottom: 30px;
+      width: 240px;
+      height: auto;
+      position: relative;
+      top: -65%;
+    }
+
+    .expert {
+      background-color: #f2f2f2;
+      width: 250px;
+      height: 200px;
+      padding: 5px;
+      margin-bottom: 20px;
+    }
+
+    .informacion-personal h1 {
+      font-size: 22px;
+      margin-bottom: 0;
+    }
+
+    .informacion-personal p {
+      margin: 0;
+    }
+
+    .resumen {
+      background-color: #f2f2f2;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: justify;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="texto-header">
+      <h1>Curriculum Vitae</h1>
+      <h2>Desarrollador Web Junior</h2>
+    </div>
+  </header>
+  <div class="menu">
+    <ul>
+      <li><a href="#informacion-personal">Información Personal</a></li>
+      <li><a href="#mi-experiencia">Mi Experiencia</a></li>
+      <li><a href="#educacion">Educación</a></li>
+      <li><a href="#habilidades">Habilidades</a></li>
+      <li><a href="#lenguajes">Lenguajes</a></li>
+      <li><a href="#intereses">Intereses</a></li>
+    </ul>
+  </div>
+  <div class="container">
+    <div class="fila1">
+      <section class="informacion-personal" id="informacion-personal">
+        <h2>Información Personal</h2>
+        <img src="https://i.pinimg.com/originals/a3/67/53/a3675381160c9dfef56d26e1f7c242f4.jpg" alt="Foto de perfil" class="imagen-perfil">
+        <p><b>Nombre:</b> Juan Pérez</p>
+        <p><b>Dirección:</b> Calle Falsa 123, Ciudad, País</p>
+        <p><b>Teléfono:</b> +123 456 7890</p>
+        <p><b>Email:</b> juan.perez@example.com</p>
+        <button class="boton-azul1"><i class="fas fa-envelope"></i> Contactar</button>
+      </section>
+    </div>
+    <div class="fila2">
+      <section class="mi-experiencia" id="mi-experiencia">
+        <h2>Mi Experiencia</h2>
+        <div class="desarrollador-web-junior">
+          <h3>Desarrollador Web Junior en XYZ</h3>
+          <p>Febrero 2021 - Presente</p>
+          <ul>
+            <li>Desarrollo de aplicaciones web utilizando HTML, CSS y JavaScript.</li>
+            <li>Colaboración con el equipo de diseño para implementar interfaces de usuario.</li>
+            <li>Optimización de aplicaciones para mejorar la velocidad y escalabilidad.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <div class="fila3">
+      <section class="educacion" id="educacion">
+        <h2>Educación</h2>
+        <h3>Licenciatura en Ciencias de la Computación</h3>
+        <h4>Universidad ABC, 2017 - 2021</h4>
+        <ul>
+          <li>Graduado con honores</li>
+          <li>Miembro del club de programación</li>
+          <li>Participación en hackathons y competencias de codificación</li>
+        </ul>
+      </section>
+    </div>
+    <div class="fila4">
+      <section class="habilidades" id="habilidades">
+        <h2>Habilidades</h2>
+        <ul>
+          <li>HTML5, CSS3, JavaScript</li>
+          <li>React, Angular</li>
+          <li>Node.js, Express.js</li>
+          <li>SQL, MongoDB</li>
+          <li>Git, GitHub</li>
+          <li>Metodologías ágiles (Scrum)</li>
+        </ul>
+      </section>
+      <section class="lenguajes" id="lenguajes">
+        <h2>Lenguajes</h2>
+        <ul>
+          <li>Español - Nativo</li>
+          <li>Inglés - Intermedio</li>
+          <li>Francés - Básico</li>
+        </ul>
+      </section>
+      <section class="intereses" id="intereses">
+        <h2>Intereses</h2>
+        <ul>
+          <li><i class="fas fa-code"></i> Programación</li>
+          <li><i class="fas fa-music"></i> Música</li>
+          <li><i class="fas fa-running"></i> Deporte</li>
+          <li><i class="fas fa-camera"></i> Fotografía</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
